@@ -15,12 +15,17 @@ APP="dist/${APP_NAME}.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "${BIN_DIR}/${APP_NAME}" "$APP/Contents/MacOS/${APP_NAME}"
+for f in AppIcon.icns MenuBarGlyph.png MenuBarGlyph@2x.png MenuBarGlyph-LICENSE.txt; do
+  [ -f "resources/$f" ] || { echo "error: resources/$f is missing" >&2; exit 1; }
+  cp "resources/$f" "$APP/Contents/Resources/$f"
+done
 
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>CFBundleIconFile</key><string>AppIcon</string>
     <key>CFBundleName</key><string>${APP_NAME}</string>
     <key>CFBundleDisplayName</key><string>${APP_NAME}</string>
     <key>CFBundleIdentifier</key><string>${BUNDLE_ID}</string>
