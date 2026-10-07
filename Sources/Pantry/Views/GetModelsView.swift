@@ -8,7 +8,7 @@ struct GetModelsView: View {
     var body: some View {
         VStack(spacing: 0) {
             Picker("Download from", selection: $service) {
-                ForEach(ModelService.allCases) { service in
+                ForEach(ModelService.allCases.filter { $0 != .other }) { service in
                     Text(service.displayName).tag(service)
                 }
             }
@@ -26,6 +26,8 @@ struct GetModelsView: View {
                 case .mlx, .huggingFace, .llamaCpp:
                     HuggingFacePane(service: service)
                         .id(service)
+                case .other:
+                    EmptyView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

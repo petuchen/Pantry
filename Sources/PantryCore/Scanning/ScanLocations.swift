@@ -63,7 +63,7 @@ public struct ScanLocations: Sendable {
     public func downloadFolder(for service: ModelService) -> URL {
         switch service {
         case .ollama: return ollamaRoot
-        case .huggingFace, .mlx: return huggingFaceHub
+        case .huggingFace, .mlx, .other: return huggingFaceHub
         case .llamaCpp: return llamaCppFolders.first ?? huggingFaceHub
         }
     }

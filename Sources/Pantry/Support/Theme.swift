@@ -11,6 +11,7 @@ extension ModelService {
         case .llamaCpp: return .orange
         case .mlx: return .teal
         case .huggingFace: return .pink
+        case .other: return .gray
         }
     }
 }

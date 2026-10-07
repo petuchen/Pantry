@@ -35,7 +35,7 @@ struct SettingsView: View {
 
             Section("Your own folders") {
                 if model.customFolders.isEmpty {
-                    Text("Keep models somewhere else, like an external drive? Add that folder here.")
+                    Text("Keep models somewhere else, like an external drive, or use another tool such as LM Studio? Add that folder here and pick “Other” if it isn’t one of the listed services.")
                         .foregroundStyle(.secondary)
                 }
                 ForEach(model.customFolders) { folder in
