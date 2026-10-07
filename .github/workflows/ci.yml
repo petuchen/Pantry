@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    # Apple Silicon runner: the only place the SwiftUI app and the full test suite can compile.
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test --parallel
+
+  syntax:
+    # Fast, toolchain-free sanity check (tree-sitter). Does not replace the job above.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install tree-sitter tree-sitter-swift
+      - run: python3 scripts/syntax-check.py
