@@ -21,7 +21,7 @@ public enum MenuBarTitle {
             return "\(percent)%"
         }
         guard showSize, hasScanned else { return nil }
-        return ByteFormat.string(totalBytes)
+        return ByteFormat.compact(totalBytes)
     }
 
     /// SF Symbol for the menu bar: a download arrow while something is downloading.

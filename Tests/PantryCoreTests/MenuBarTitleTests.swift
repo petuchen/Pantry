@@ -15,6 +15,14 @@ final class MenuBarTitleTests: XCTestCase {
         XCTAssertTrue(text!.contains("GB"))
     }
 
+    func testSizeIsRoundedUpToWholeUnits() {
+        XCTAssertEqual(title(bytes: 177_770_000_000), "178 GB")
+        XCTAssertEqual(title(bytes: 177_000_000_001), "178 GB")
+        XCTAssertEqual(title(bytes: 42_300_000_000), "43 GB")
+        XCTAssertEqual(title(bytes: 999_900_000), "1 GB", "rounding up to 1000 MB moves to the next unit")
+        XCTAssertEqual(title(bytes: 1_200_000_000_000), "2 TB")
+    }
+
     func testIconOnlyWhenSizeIsTurnedOffOrNotScannedYet() {
         XCTAssertNil(title(showSize: false))
         XCTAssertNil(title(scanned: false), "never flash 0 bytes before the first scan")
