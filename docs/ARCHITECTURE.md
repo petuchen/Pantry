@@ -16,6 +16,27 @@ PantryCore (library, no SwiftUI)          Pantry (executable)
 └─ Support/    path safety, sizing, disk
 ```
 
+## Project layout
+
+```
+Pantry/
+├─ Package.swift
+├─ Sources/
+│  ├─ PantryCore/        all logic, no UI imports, unit tested
+│  │  ├─ Models/         ModelEntry, ModelService, ModelCategory
+│  │  ├─ Naming/         name parser, classifier
+│  │  ├─ Scanning/       Ollama, Hugging Face cache and loose-folder scanners
+│  │  ├─ Analysis/       storage summary, hashing, duplicates, menu bar title
+│  │  ├─ Removal/        planner and guarded executor
+│  │  ├─ Downloads/      Ollama pull, Hugging Face client and cache writer
+│  │  └─ Support/        path safety, sizing, disk space, formatting
+│  └─ Pantry/            SwiftUI app: AppModel, Views/, MenuBar/, Support/
+├─ Tests/PantryCoreTests/
+├─ docs/                 ARCHITECTURE, UX-REVIEW, NAMING
+├─ scripts/              build_dmg.sh, build-app.sh, rename-app.sh, syntax-check.py
+└─ .github/workflows/    CI: build and test on macOS, syntax check on Linux
+```
+
 ## Data flow
 
 ```

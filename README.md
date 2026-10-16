@@ -10,9 +10,6 @@ Ollama, llama.cpp, MLX and Hugging Face each keep models in a different folder. 
 all of them, shows what you have and what it costs, helps you download more, finds copies you
 don't need, and removes things only when you say so.
 
-> *Pantry* is a working title. See [docs/NAMING.md](docs/NAMING.md) for alternatives, and
-> `scripts/rename-app.sh` to rename everything in one command.
-
 <p align="center">
   <a href="https://github.com/petuchen/Pantry/releases"><img alt="Release" src="https://img.shields.io/github/v/release/petuchen/Pantry?include_prereleases&sort=semver"></a>
   <img alt="macOS 14+" src="https://img.shields.io/badge/macOS-14%2B-blue">
@@ -22,13 +19,9 @@ don't need, and removes things only when you say so.
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green"></a>
 </p>
 
-Apple Silicon · macOS 14+ · SwiftUI · no dependencies · MIT
-
 <p align="center">
   <img src="docs/screenshots/overview.png" width="720" alt="Pantry overview: total size, storage by service, what the models are for, largest models">
 </p>
-
-<!-- More screenshots to add: Models, Cleanup, menu bar popover. -->
 
 ## Features
 
@@ -49,7 +42,7 @@ context menu and Pantry remembers.
 Requires macOS 14+ and Xcode 15+ (or the Swift 5.9+ command line tools).
 
 ```bash
-git clone <this repo> && cd Pantry
+git clone https://github.com/petuchen/Pantry.git && cd Pantry
 swift run Pantry                 # run from Terminal
 swift test                       # run the unit tests
 ./scripts/build_dmg.sh           # test + release build + build/Pantry.dmg
@@ -103,38 +96,13 @@ Version 0.1.1, the first public release:
 
 Full details in [CHANGELOG.md](CHANGELOG.md).
 
-## Project layout
-
-```
-Pantry/
-├─ Package.swift
-├─ Sources/
-│  ├─ PantryCore/        all logic, no UI imports, unit tested
-│  │  ├─ Models/         ModelEntry, ModelService, ModelCategory
-│  │  ├─ Naming/         name parser, classifier
-│  │  ├─ Scanning/       Ollama, Hugging Face cache and loose-folder scanners
-│  │  ├─ Analysis/       storage summary, hashing, duplicates, menu bar title
-│  │  ├─ Removal/        planner and guarded executor
-│  │  ├─ Downloads/      Ollama pull, Hugging Face client and cache writer
-│  │  └─ Support/        path safety, sizing, disk space, formatting
-│  └─ Pantry/            SwiftUI app: AppModel, Views/, MenuBar/, Support/
-├─ Tests/PantryCoreTests/
-├─ docs/                 ARCHITECTURE, UX-REVIEW, NAMING
-├─ scripts/              build_dmg.sh, build-app.sh, rename-app.sh, syntax-check.py
-└─ .github/workflows/    CI: build and test on macOS, syntax check on Linux
-```
-
 ## Tests
 
-`swift test` runs 90 unit tests against real files built in temporary folders: Ollama manifests
-and blobs, Hugging Face caches with real symlinks, sharded GGUFs, llama.cpp sidecars. They cover
-scanners, name parsing and classification, shared-storage accounting, duplicate detection,
-removal planning and its safety rules (outside-folder, symlink escape, all-or-nothing refusal),
-download parsing and cache layout, and the menu bar title.
-
-The SwiftUI layer is thin and not unit tested, and downloads are tested through their parsing
-and file layout rather than against live servers. See [docs/UX-REVIEW.md](docs/UX-REVIEW.md)
-for how the interface was reviewed and what still needs real users.
+`swift test` runs the unit tests against real files built in temporary folders (Ollama
+manifests and blobs, Hugging Face caches with symlinks, sharded GGUFs). They cover scanning,
+classification, duplicate detection, removal safety rules and download parsing. The SwiftUI
+layer is thin and not unit tested; downloads are tested by parsing and file layout, not
+against live servers.
 
 ## Known limitations
 
@@ -150,10 +118,9 @@ for how the interface was reviewed and what still needs real users.
 
 ## Docs
 
-* [Architecture](docs/ARCHITECTURE.md): data flow, where each service stores models, and why the
-  removal and duplicate logic works the way it does.
-* [UX review](docs/UX-REVIEW.md): the ten Laws of UX applied screen by screen.
-* [Naming](docs/NAMING.md): name options and how to rename.
+* [Architecture](docs/ARCHITECTURE.md): project layout, data flow, where each service stores
+  models, and how removal and duplicate detection work.
+* [UX review](docs/UX-REVIEW.md): the interface reviewed against the Laws of UX.
 * [Changelog](CHANGELOG.md)
 
 ## License
