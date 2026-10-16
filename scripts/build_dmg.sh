@@ -7,6 +7,9 @@
 # Usage:
 #   ./scripts/build_dmg.sh                    test + build + dmg (ad-hoc signed)
 #   ./scripts/build_dmg.sh --skip-tests       build + dmg only
+#   ./scripts/build_dmg.sh --release          also publish a GitHub release (no question asked)
+#   ./scripts/build_dmg.sh --no-release       never offer to publish
+#     (by default, a build run in a terminal ends by asking whether to publish the DMG)
 #   ./scripts/build_dmg.sh --sign "Developer ID Application: Name (TEAMID)" [--notarize PROFILE]
 #     (--notarize needs a profile made once with: xcrun notarytool store-credentials PROFILE)
 set -eu
@@ -19,17 +22,20 @@ APP_NAME="Pantry"
 SWIFT_PRODUCT_NAME="Pantry"
 APP_BUNDLE="$BUILD_DIR/$APP_NAME.app"
 BUNDLE_ID="dev.local.pantry"
-VERSION="0.1.0"
+VERSION="0.1.1"
 
 SKIP_TESTS=0
+RELEASE_MODE="ask"   # ask | yes | no
 IDENTITY=""
 NOTARY_PROFILE=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --skip-tests) SKIP_TESTS=1; shift ;;
+    --release) RELEASE_MODE="yes"; shift ;;
+    --no-release) RELEASE_MODE="no"; shift ;;
     --sign) [ $# -ge 2 ] || { echo "error: --sign needs an identity" >&2; exit 1; }; IDENTITY="$2"; shift 2 ;;
     --notarize) [ $# -ge 2 ] || { echo "error: --notarize needs a profile" >&2; exit 1; }; NOTARY_PROFILE="$2"; shift 2 ;;
-    -h|--help) sed -n '2,12p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,16p' "$0"; exit 0 ;;
     *) echo "error: unknown option $1 (try --help)" >&2; exit 1 ;;
   esac
 done
@@ -158,8 +164,61 @@ if [ -n "$NOTARY_PROFILE" ]; then
   xcrun stapler staple "$BUILD_DIR/$APP_NAME.dmg"
 fi
 
+# A versioned copy is what gets attached to a GitHub release.
+VERSIONED_DMG="$BUILD_DIR/$APP_NAME-$VERSION.dmg"
+cp "$BUILD_DIR/$APP_NAME.dmg" "$VERSIONED_DMG"
+
 echo ""
-echo "Done: $BUILD_DIR/$APP_NAME.dmg"
+echo "Done: $BUILD_DIR/$APP_NAME.dmg  (also $APP_NAME-$VERSION.dmg)"
 if [ -z "$IDENTITY" ]; then
   echo "Note: ad-hoc signed for local use. On another Mac, right-click the app and choose Open once."
 fi
+
+# ---- Optional: publish a GitHub release -------------------------------------
+publish_release() {
+  TAG="v$VERSION"
+  command -v gh >/dev/null 2>&1 || { echo "Release skipped: GitHub CLI not found (brew install gh)."; return 0; }
+  gh auth status >/dev/null 2>&1 || { echo "Release skipped: not signed in to GitHub (run: gh auth login)."; return 0; }
+  cd "$ROOT_DIR"
+  if [ -n "$(git status --porcelain)" ]; then
+    echo "Release skipped: uncommitted changes. Commit them (and push) first."; return 0
+  fi
+  git fetch -q origin 2>/dev/null || true
+  if [ "$(git rev-parse HEAD)" != "$(git rev-parse '@{u}' 2>/dev/null || echo none)" ]; then
+    echo "Release skipped: the latest commit is not pushed yet. Run: git push"; return 0
+  fi
+  if gh release view "$TAG" >/dev/null 2>&1; then
+    echo "Release skipped: $TAG already exists. Bump VERSION in this script first."; return 0
+  fi
+
+  NOTES_FILE="$BUILD_DIR/release-notes.md"
+  awk -v v="$VERSION" '
+    $0 ~ "^## \\[" v "\\]" { on=1; next }
+    on && /^## / { exit }
+    on { print }
+  ' CHANGELOG.md > "$NOTES_FILE"
+  [ -s "$NOTES_FILE" ] || echo "First launch notes only: no [$VERSION] section found in CHANGELOG.md." > "$NOTES_FILE"
+  if [ -z "$IDENTITY" ]; then
+    {
+      echo ""
+      echo "**First launch:** this build is not notarized. Right-click Pantry.app, choose Open, then Open."
+    } >> "$NOTES_FILE"
+  fi
+
+  echo "==> Publishing $TAG"
+  git rev-parse "$TAG" >/dev/null 2>&1 || git tag -a "$TAG" -m "$APP_NAME $VERSION"
+  git push origin "$TAG"
+  gh release create "$TAG" "$VERSIONED_DMG" --title "$APP_NAME $VERSION" --notes-file "$NOTES_FILE"
+}
+
+case "$RELEASE_MODE" in
+  yes) publish_release ;;
+  ask)
+    if [ -t 0 ]; then
+      echo ""
+      printf "Publish %s as a GitHub release (tag v%s)? [y/N] " "$APP_NAME-$VERSION.dmg" "$VERSION"
+      read -r ANSWER || ANSWER=""
+      case "$ANSWER" in y|Y|yes|YES) publish_release ;; *) echo "Not publishing." ;; esac
+    fi
+    ;;
+esac

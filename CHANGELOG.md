@@ -6,7 +6,11 @@ All notable changes to Pantry are recorded here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-16
+
 ### Changed
+- `build_dmg.sh` can publish a GitHub release after building (asks first; `--release` / `--no-release`) and writes a versioned `Pantry-<version>.dmg`.
+- README shows version, platform, language and licence badges.
 - Custom folders can be tagged “Other” for tools beyond Ollama, llama.cpp, MLX and Hugging Face (e.g. LM Studio, Jan).
 - Menu bar size is shown as a whole number, rounded up (177.77 GB → 178 GB), to save space.
 
