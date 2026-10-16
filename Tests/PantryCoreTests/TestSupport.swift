@@ -87,7 +87,9 @@ enum Fixtures {
         var digests: [String] = []
         var manifest: [String: Any] = ["schemaVersion": 2]
         if let config {
-            let data = try JSONSerialization.data(withJSONObject: config)
+            // sortedKeys: Swift dictionaries iterate in a per-instance order, so without it two
+            // identical configs could serialize differently (and hash to different blobs).
+            let data = try JSONSerialization.data(withJSONObject: config, options: [.sortedKeys])
             let hex = try store(data)
             digests.append(hex)
             manifest["config"] = ["mediaType": "application/vnd.docker.container.image.v1+json", "digest": "sha256:" + hex, "size": data.count]
@@ -102,7 +104,7 @@ enum Fixtures {
 
         let manifestDir = root.appendingPathComponent("manifests/\(host)/\(namespace)/\(name)", isDirectory: true)
         try fm.createDirectory(at: manifestDir, withIntermediateDirectories: true)
-        try JSONSerialization.data(withJSONObject: manifest).write(to: manifestDir.appendingPathComponent(tag))
+        try JSONSerialization.data(withJSONObject: manifest, options: [.sortedKeys]).write(to: manifestDir.appendingPathComponent(tag))
         return digests
     }
 

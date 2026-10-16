@@ -6,6 +6,9 @@ All notable changes to Pantry are recorded here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+- Flaky test: test fixtures serialized identical Ollama configs with a random key order, so shared blobs sometimes differed (failed on CI, passed locally).
+
 ### Changed
 - CI: newer action versions (Node 24), pinned Ubuntu runner, test step matches the local invocation, and a failure summary is printed.
 
