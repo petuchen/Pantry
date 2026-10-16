@@ -13,6 +13,15 @@ don't need, and removes things only when you say so.
 > *Pantry* is a working title. See [docs/NAMING.md](docs/NAMING.md) for alternatives, and
 > `scripts/rename-app.sh` to rename everything in one command.
 
+<p align="center">
+  <a href="https://github.com/petuchen/Pantry/releases"><img alt="Release" src="https://img.shields.io/github/v/release/petuchen/Pantry?include_prereleases&sort=semver"></a>
+  <img alt="macOS 14+" src="https://img.shields.io/badge/macOS-14%2B-blue">
+  <img alt="Apple Silicon" src="https://img.shields.io/badge/Apple%20Silicon-arm64-lightgrey">
+  <img alt="Swift 5.9" src="https://img.shields.io/badge/Swift-5.9-orange">
+  <a href="https://github.com/petuchen/Pantry/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/petuchen/Pantry/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green"></a>
+</p>
+
 Apple Silicon · macOS 14+ · SwiftUI · no dependencies · MIT
 
 <p align="center">
@@ -83,7 +92,7 @@ Ollama on `localhost`, and `huggingface.co` for search and downloads.
 
 ## What's new
 
-Version 0.1.0, the first release:
+Version 0.1.1, the first public release:
 
 * Scans Ollama, Hugging Face, MLX, llama.cpp and your own folders into one library.
 * Dashboard with storage by service and by use; shared layers counted once.
