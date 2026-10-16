@@ -6,6 +6,9 @@ All notable changes to Pantry are recorded here. The format follows
 
 ## [Unreleased]
 
+### Changed
+- CI: newer action versions (Node 24), pinned Ubuntu runner, test step matches the local invocation, and a failure summary is printed.
+
 ## [0.1.1] - 2026-10-16
 
 ### Changed

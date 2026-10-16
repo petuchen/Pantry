@@ -9,20 +9,31 @@ jobs:
     # Apple Silicon runner: the only place the SwiftUI app and the full test suite can compile.
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Swift version
         run: swift --version
       - name: Build
-        run: swift build
+        run: |
+          set -o pipefail
+          swift build 2>&1 | tee build.log
       - name: Test
-        run: swift test --parallel
+        # Same invocation as scripts/build_dmg.sh (no --parallel), so CI and local runs match.
+        run: |
+          set -o pipefail
+          swift test 2>&1 | tee test.log
+      - name: Failure summary
+        if: failure()
+        run: |
+          echo "---- errors ----"
+          grep -hE ": error:|error: " build.log test.log 2>/dev/null | sort -u | head -60 || true
+          grep -hE "Executed [0-9]+ tests?, with" test.log 2>/dev/null | tail -1 || true
 
   syntax:
     # Fast, toolchain-free sanity check (tree-sitter). Does not replace the job above.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: pip install tree-sitter tree-sitter-swift
