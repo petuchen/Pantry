@@ -7,6 +7,7 @@ All notable changes to Pantry are recorded here. The format follows
 ## [Unreleased]
 
 ### Changed
+- Custom folders can be tagged “Other” for tools beyond Ollama, llama.cpp, MLX and Hugging Face (e.g. LM Studio, Jan).
 - Menu bar size is shown as a whole number, rounded up (177.77 GB → 178 GB), to save space.
 
 ### Added

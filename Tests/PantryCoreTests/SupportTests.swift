@@ -48,6 +48,6 @@ final class SupportTests: XCTestCase {
         )
         XCTAssertEqual(entry.technicalSummary, "8B · Q4_K_M · GGUF")
         XCTAssertEqual(ModelCategory.allCases.count, Set(ModelCategory.allCases.map { $0.displayName }).count, "display names are unique")
-        XCTAssertEqual(ModelService.allCases.count, 4)
+        XCTAssertEqual(ModelService.allCases.count, 5)
     }
 }

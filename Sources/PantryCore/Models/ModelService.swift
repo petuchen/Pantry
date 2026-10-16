@@ -7,6 +7,8 @@ public enum ModelService: String, CaseIterable, Codable, Hashable, Sendable, Ide
     case llamaCpp
     case mlx
     case huggingFace
+    /// Any other tool (LM Studio, Jan, ...). Only reachable through a user-added folder.
+    case other
 
     public var id: String { rawValue }
 
@@ -16,6 +18,7 @@ public enum ModelService: String, CaseIterable, Codable, Hashable, Sendable, Ide
         case .llamaCpp: return "llama.cpp"
         case .mlx: return "MLX"
         case .huggingFace: return "Hugging Face"
+        case .other: return "Other"
         }
     }
 
@@ -26,6 +29,7 @@ public enum ModelService: String, CaseIterable, Codable, Hashable, Sendable, Ide
         case .llamaCpp: return "terminal"
         case .mlx: return "cpu"
         case .huggingFace: return "face.smiling"
+        case .other: return "folder"
         }
     }
 }
