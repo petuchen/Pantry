@@ -1,4 +1,8 @@
-# Pantry
+<p align="center">
+  <img src="resources/AppIcon-1024.png" width="128" alt="Pantry app icon">
+</p>
+
+<h1 align="center">Pantry</h1>
 
 **See, fetch and clear out the local AI models on your Mac.**
 
@@ -11,7 +15,11 @@ don't need, and removes things only when you say so.
 
 Apple Silicon · macOS 14+ · SwiftUI · no dependencies · MIT
 
-<!-- Add screenshots here: Overview, Models, Cleanup, menu bar popover. -->
+<p align="center">
+  <img src="docs/screenshots/overview.png" width="720" alt="Pantry overview: total size, storage by service, what the models are for, largest models">
+</p>
+
+<!-- More screenshots to add: Models, Cleanup, menu bar popover. -->
 
 ## Features
 
