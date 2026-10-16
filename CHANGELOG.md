@@ -6,6 +6,9 @@ All notable changes to Pantry are recorded here. The format follows
 
 ## [Unreleased]
 
+### Changed
+- Menu bar size is shown as a whole number, rounded up (177.77 GB → 178 GB), to save space.
+
 ### Added
 - Menu bar item: icon with the total size beside it, or the download percentage while a
   download runs. The popover shows the total, storage by service, running downloads with a
