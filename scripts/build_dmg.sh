@@ -88,15 +88,18 @@ cp "$SWIFT_BINARY" "$APP_BUNDLE/Contents/MacOS/$APP_NAME"
 SWIFT_RESOURCE_BUNDLE="$BIN_DIR/${SWIFT_PRODUCT_NAME}_${SWIFT_PRODUCT_NAME}.bundle"
 if [ -d "$SWIFT_RESOURCE_BUNDLE" ]; then cp -R "$SWIFT_RESOURCE_BUNDLE" "$APP_BUNDLE/Contents/Resources/"; fi
 
-ICON_FILE="$ROOT_DIR/resources/AppIcon.icns"
-ICON_PLIST_ENTRY=""
-if [ -f "$ICON_FILE" ]; then
-  cp "$ICON_FILE" "$APP_BUNDLE/Contents/Resources/AppIcon.icns"
-  ICON_PLIST_ENTRY="    <key>CFBundleIconFile</key>
+# Icons live in resources/. The app icon is wired through Info.plist; the menu bar
+# glyph (1x + @2x, template image) is loaded at runtime from Contents/Resources.
+RES_DIR="$ROOT_DIR/resources"
+for f in AppIcon.icns MenuBarGlyph.png MenuBarGlyph@2x.png MenuBarGlyph-LICENSE.txt; do
+  if [ ! -f "$RES_DIR/$f" ]; then
+    echo "error: resources/$f is missing; the icons must be present to build." >&2
+    exit 1
+  fi
+  cp "$RES_DIR/$f" "$APP_BUNDLE/Contents/Resources/$f"
+done
+ICON_PLIST_ENTRY="    <key>CFBundleIconFile</key>
     <string>AppIcon</string>"
-else
-  echo "warning: resources/AppIcon.icns not found; building without a custom icon."
-fi
 
 cat > "$APP_BUNDLE/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>

@@ -33,6 +33,10 @@ All notable changes to Pantry are recorded here. The format follows
 ### Removed
 - References to private projects from the documentation.
 
+### Added
+- App icon and menu bar glyph from `resources/` are bundled by the build scripts (build fails if missing).
+- Menu bar uses the bundled glyph as a template image (SF Symbol fallback; arrow while downloading).
+
 ## [0.1.0] - 2026-10-07
 
 Initial version.

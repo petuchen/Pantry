@@ -142,3 +142,7 @@ for how the interface was reviewed and what still needs real users.
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Credits
+
+Menu bar glyph: "cat" from [Griddy Icons](https://github.com/griddy-icons/griddy-icons) by Zuzana Benova (MIT); see `resources/MenuBarGlyph-LICENSE.txt`.
